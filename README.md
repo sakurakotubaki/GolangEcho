@@ -6,7 +6,7 @@ https://echo.labstack.com/docs/quick-start
 
 server.goを作成して、サンプルコードを書く
 ```go
-package main
+package 1
 
 import (
 	"net/http"
@@ -126,3 +126,64 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "洗濯洗剤"}' h
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"name": "キッチンペーパー"}' http://localhost:8080/shopping
 ```
+
+## Docker化する方法
+GolangのREST APIをDocker化する手順を説明します。
+
+Dockerfileの作成:
+まず、プロジェクトのルートディレクトリにDockerfileを作成します。以下の内容をDockerfileに追加します。
+```Dockerfile
+# ベースイメージを指定します。Golangの公式イメージを使用します。
+FROM golang:latest
+
+# コンテナ内に作業ディレクトリを作成します。
+WORKDIR /app
+
+# ホストのカレントディレクトリのファイルをコンテナの作業ディレクトリにコピーします。
+COPY . .
+
+# Goの依存関係を解決します。
+RUN go mod download
+
+# アプリケーションをビルドします。
+RUN go build -o main .
+
+# コンテナ起動時に実行されるコマンドを指定します。
+CMD ["./main"]
+```
+
+Dockerイメージのビルド:
+Dockerfileを使用して、Dockerイメージをビルドします。以下のコマンドを実行します。
+
+```
+docker build -t my-golang-app .
+```
+
+コンテナの起動:
+Dockerイメージからコンテナを起動します。以下のコマンドを実行します。
+
+```
+docker run -p 8080:8080 my-golang-app
+```
+
+これにより、GolangのREST APIがDockerコンテナ内で実行されます。
+
+Curlでのエンドポイントへのアクセス:
+REST APIにアクセスするためには、Curlを使用します。以下のエンドポイントを使用して、各APIにアクセスできます。
+- 買い物リストの取得(GET): http://localhost:8080/shopping
+- 新しいアイテムの追加(POST): http://localhost:8080/shopping
+- アイテムの更新(PUT): http://localhost:8080/shopping/:id
+- アイテムの削除(DELETE): http://localhost:8080/shopping/:id
+注意: :idは実際のアイテムのIDに置き換えてください。
+
+例えば、買い物リストの取得(GET)の場合、以下のコマンドを実行します。
+
+注意: :idは実際のアイテムのIDに置き換えてください。
+
+例えば、買い物リストの取得(GET)の場合、以下のコマンドを実行します。
+
+```
+curl http://localhost:8080/shopping
+```
+
+これで、GolangのREST APIがDockerコンテナ内で実行され、指定したエンドポイントにアクセスできるようになります。
