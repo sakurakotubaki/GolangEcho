@@ -156,14 +156,14 @@ Dockerイメージのビルド:
 Dockerfileを使用して、Dockerイメージをビルドします。以下のコマンドを実行します。
 
 ```
-docker build -t my-golang-app .
+docker build -t my-golang-app:v1 .
 ```
 
 コンテナの起動:
 Dockerイメージからコンテナを起動します。以下のコマンドを実行します。
 
 ```
-docker run -p 8080:8080 my-golang-app
+docker run -p 8080:8080 my-golang-app:v1
 ```
 
 これにより、GolangのREST APIがDockerコンテナ内で実行されます。
